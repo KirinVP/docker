@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: drupal_db
+    networks:
+      - drupal-network
+    environment:
+      - MYSQL_DATABASE=drupal
+      - MYSQL_USER=victor
+      - MYSQL_PASSWORD=juan
+      - MYSQL_ROOT_PASSWORD=juan
+    volumes:
+      - db_data:/var/lib/mysql  
+    image: mysql:8
+
+  drupal:
+    container_name: drupal_app
+    restart: always
+    networks:
+      - drupal-network
+    environment:
+      - DRUPAL_DB_HOST=db 
+      - DRUPAL_DB_NAME=drupal
+      - DRUPAL_DB_USER=victor
+      - DRUPAL_DB_PASSWORD=juan
+    ports:
+      - "8080:80" 
+    volumes:
+      - drupal_data:/var/www/html  
+    image: drupal:latest
+
+networks:
+  drupal-network:
+
+volumes:
+  db_data:
+  drupal_data:

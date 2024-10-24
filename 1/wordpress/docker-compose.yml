@@ -1,0 +1,32 @@
+services:
+  mysql:
+    container_name: wordpress_db
+    networks:
+        - wordpress-network
+    environment:
+        - MYSQL_DATABASE=wordpress
+        - MYSQL_USER=usuario_wp
+        - MYSQL_PASSWORD=contrasena_wp
+        - MYSQL_ROOT_PASSWORD=contrasena_root
+    volumes:
+        - ./db_data:/var/lib/mysql
+    image: mysql:8
+
+  wordpress:
+    container_name: wordpress_app
+    networks:
+        - wordpress-network
+    ports:
+        - 8000:80
+    environment:
+        - WORDPRESS_DB_HOST=wordpress_db:3306
+        - WORDPRESS_DB_USER=usuario_wp
+        - WORDPRESS_DB_PASSWORD=contrasena_wp
+        - WORDPRESS_DB_NAME=wordpress
+    volumes:
+        - ./wordpress_data:/var/www/html
+    image: wordpress:latest
+
+networks:
+  wordpress-network:
+    driver: bridge
